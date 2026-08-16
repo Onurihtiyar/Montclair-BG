@@ -100,9 +100,8 @@ function buildViews(raw){
   const n2c={}; players.forEach(p=>n2c[p.name]=p.club);
   const g={}; (raw.log||[]).forEach(x=>{(g[x.t]=g[x.t]||[]).push(x);});
   let events=Object.keys(g).map(t=>{
-    const rows=g[t].slice().sort((a,b)=>b.bp-a.bp||b.W-a.W||a.L-b.L);
-    const top=rows.length?rows[0].bp:0;
-    const st=rows.map((x,i)=>({rank:i+1,name:x.name,club:n2c[x.name]||'Unaffiliated',W:x.W,L:x.L,pts:Math.round(x.bp*100)/100,champ:x.bp===top&&top>0}));
+    const rows=g[t].slice().sort((a,b)=>a.L-b.L||b.W-a.W||b.bp-a.bp);
+    const st=rows.map((x,i)=>({rank:i+1,name:x.name,club:n2c[x.name]||'Unaffiliated',W:x.W,L:x.L,pts:Math.round(x.bp*100)/100,champ:x.L<2}));
     return {id:+t,date:dateLabel(t),n:rows.length,champs:st.filter(s=>s.champ).map(s=>s.name),standings:st};
   }).sort((a,b)=>a.id-b.id);
   events.reverse();
