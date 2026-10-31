@@ -165,11 +165,11 @@ function showPlayer(name){
   const evs=[];
   VIEW.events.forEach(e=>{const s=e.standings.find(x=>x.name===name);if(s)evs.push({date:e.date,rank:s.rank,W:s.W,L:s.L,pts:s.pts,champ:s.champ,co:e.champs.length>1,after:e.champs.length});});
   const pl=(VIEW.players||[]).find(p=>p.name===name)||{};
-  const titles=evs.filter(x=>x.champ).length;
+  const titles=evs.filter(x=>x.champ).length;const runs=evs.filter(x=>!x.champ&&x.after===1&&x.rank===2).length;
   const tot=evs.reduce((a,x)=>({W:a.W+x.W,L:a.L+x.L,pts:a.pts+x.pts}),{W:0,L:0,pts:0});
   const body=evs.map(x=>{var fin,cls='';if(x.champ){fin='\u{1F3C6} '+(x.co?'Co-champion':'Champion');cls=' class="pmrow-ch"';}else if(x.after===1&&x.rank===2){fin='\u{1F948} Runner-up';}else{fin=ordP(x.rank)+' place';}return '<tr'+cls+'><td>'+x.date+'</td><td>'+fin+'</td><td class="num">'+x.W+'\u2013'+x.L+'</td><td class="pts">'+(Math.round(x.pts*100)/100)+'</td></tr>';}).join('');
   $('pmTitle').textContent=name;
-  $('pmSub').innerHTML=(pl.club?clubCell(pl.club,true)+' &middot; ':'')+evs.length+' events &middot; '+tot.W+'\u2013'+tot.L+' &middot; '+(Math.round(tot.pts*100)/100)+' pts'+(titles?' &middot; \u{1F3C6} '+titles+(titles>1?' titles':' title'):'');
+  $('pmSub').innerHTML=(pl.club?clubCell(pl.club,true)+' &middot; ':'')+evs.length+' events &middot; '+tot.W+'\u2013'+tot.L+' &middot; '+(Math.round(tot.pts*100)/100)+' pts'+(titles?' &middot; \u{1F3C6} '+titles+(titles>1?' titles':' title'):'')+(runs?' &middot; \u{1F948} '+runs+(runs>1?' runner-ups':' runner-up'):'');
   $('pmBody').innerHTML=body||'<tr><td colspan="4" style="color:#977c50">No events recorded.</td></tr>';
   $('pmodal').classList.add('on');$('pmodal').setAttribute('aria-hidden','false');
 }
